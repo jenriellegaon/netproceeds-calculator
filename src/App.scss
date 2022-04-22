@@ -12,6 +12,7 @@
 
   .header {
     font-size: 24px;
+    font-weight: 600;
   }
 
   .container {
@@ -22,7 +23,7 @@
     padding: 24px;
 
     & > *:not(:last-child) {
-      margin-bottom: 14px;
+      margin-bottom: 8px;
     }
 
     .dates {
@@ -43,28 +44,45 @@
       align-items: center;
       align-content: center;
       & > *:not(:last-child) {
-        margin-bottom : 14px;
+        margin-bottom : 10px;
       }
     }
 
     .results-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: space-between;
-      align-items: center;
-      align-content: center;
-      background-color: #f2f5f5;
-      padding: 4px 14px;
+      align-items: flex-start;
+      align-content: flex-start;
+      & > *:not(:last-child) {
+        margin-right : 8px;
+      }
 
-      .results {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        align-content: center;
-        padding: 4px;
+      .left-container {
+        max-width: 50%;
         width: 100% !important;
+        height: 100% !important;
+        padding: 4px 14px;
+        background-color: #f2f5f5;
+      }
+
+      .right-container {
+        max-width: 50%;
+        width: 100% !important;
+        height: 100% !important;
+        padding: 4px 14px;
+        background-color: #f2f5f5;
       }
     }
   }
+}
+
+.results {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  align-content: center;
+  padding: 4px;
+  width: 100% !important;
 }
