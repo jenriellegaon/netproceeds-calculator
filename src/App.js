@@ -7,6 +7,7 @@ import Select from '@mui/material/Select'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import moment from 'moment'
+import { isEmpty } from 'lodash'
 import React, { useState } from 'react'
 import './App.scss'
 import { getDifferenceInDays, roundOff } from './helpers'
@@ -21,6 +22,7 @@ function App() {
     atc: 0,
     processingFee: 0,
     bankCharge: 0,
+    fixedAmount: 0,
   })
   const [chargeTo, setchargeTo] = useState("BUYER")
 
@@ -43,7 +45,14 @@ function App() {
 
   const taxWithheld = roundOff(values?.outstandingAmount / (vatRate + 1) * atc)
   const acceptedAmount = roundOff(values?.outstandingAmount - taxWithheld)
-  const totalCharges = roundOff(acceptedAmount * (bankCharge + processingFee))
+
+  let totalCharges = 0
+  if (!isEmpty(values?.processingFee)) {
+    totalCharges = roundOff(acceptedAmount * (bankCharge + processingFee))
+  } else if (!isEmpty(values?.fixedAmount)) {
+    totalCharges = roundOff((acceptedAmount * bankCharge) + Number(values?.fixedAmount))
+  }
+
   const factorAmount = roundOff(acceptedAmount * (factorRate * daysBeforeDueDate) / divisor)
   const receivableAmount = chargeTo === "BUYER" ? roundOff(acceptedAmount + totalCharges) : acceptedAmount
   const netProceeds = chargeTo === "BUYER" ? roundOff(acceptedAmount - factorAmount) : roundOff(acceptedAmount - factorAmount - totalCharges)
@@ -125,6 +134,17 @@ function App() {
             fullWidth
             type="number"
             onChange={handleChange('processingFee')}
+            disabled={!isEmpty(values?.fixedAmount)}
+          />
+          <TextField
+            id="fixedAmount"
+            label="Fixed Amount"
+            variant="outlined"
+            placeholder="0"
+            fullWidth
+            type="number"
+            onChange={handleChange('fixedAmount')}
+            disabled={!isEmpty(values?.processingFee)}
           />
           <TextField
             id="bankCharge"
