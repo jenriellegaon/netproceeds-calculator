@@ -46,11 +46,16 @@ function App() {
   const taxWithheld = roundOff(values?.outstandingAmount / (vatRate + 1) * atc)
   const acceptedAmount = roundOff(values?.outstandingAmount - taxWithheld)
 
+  let bankChargeValue = 0
+  let processingFeeValue = 0
   let totalCharges = 0
   if (!isEmpty(values?.processingFee)) {
-    totalCharges = roundOff(acceptedAmount * (bankCharge + processingFee))
+    bankChargeValue = roundOff(acceptedAmount * bankCharge)
+    processingFeeValue = roundOff(acceptedAmount * processingFee)
+    totalCharges = roundOff(bankChargeValue + processingFeeValue)
   } else if (!isEmpty(values?.fixedAmount)) {
-    totalCharges = roundOff((acceptedAmount * bankCharge) + Number(values?.fixedAmount))
+    bankChargeValue = roundOff(acceptedAmount * bankCharge)
+    totalCharges = roundOff(bankChargeValue + Number(values?.fixedAmount))
   }
 
   const factorAmount = roundOff(acceptedAmount * (factorRate * daysBeforeDueDate) / divisor)
